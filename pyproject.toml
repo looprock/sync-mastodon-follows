@@ -8,6 +8,7 @@ license = "The MIT License"
 [tool.poetry.dependencies]
 python = "^3.10"
 "Mastodon.py" = "^1.8.0"
+tomli = "^2.0.1"
 
 [tool.poetry.dev-dependencies]
 

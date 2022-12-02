@@ -14,7 +14,7 @@ toml_config = f"{homedir}/.sync-mastodon-follows.conf"
 if not os.path.isfile(toml_config):
     sys.exit("ERROR: config file not found, please create ~/.sync-mastodon-follows.conf")
 
-
+# https://martinheinz.dev/blog/86
 # https://medium.com/@martin.heinz/getting-started-with-mastodon-api-in-python-9f105309ed43
 
 def process_follows(token, host):

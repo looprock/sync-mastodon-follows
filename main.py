@@ -5,7 +5,9 @@ import sys
 import re
 import tomli
 
-# TODO: handle pagination, I'm not getting more than 40 results back
+# TODO:
+# - why are things double-processing?
+# - why are accounts already added being re-added?
 
 homedir = os.path.expanduser("~")
 toml_config = f"{homedir}/.sync-mastodon-follows.conf"
@@ -19,16 +21,20 @@ def process_follows(token, host):
     '''Retrieve a followers object and return a list of usernames'''
     source = Mastodon(access_token=token, api_base_url=f"https://{host}")
     # print(f"my id:{source.account_verify_credentials()['id']}")
-    source_follows_raw = source.account_following(source.account_verify_credentials()["id"])
+    follows = source.account_following(source.account_verify_credentials()["id"])
     accounts = []
-    for i in source_follows_raw:
-        # print(f"username: {i['username']}, account: {i['acct']}, id: {i['id']}")
-        result = re.search(r'(.*)@(.*)$', i["acct"])
-        if not result:
-            accounts.append(f"{i['username']}@{host}")
+    while follows:
+        follows = source.fetch_next(follows)
+        if follows:
+            for i in follows:
+                # print(f"username: {i['username']}, account: {i['acct']}, id: {i['id']}")
+                result = re.search(r'(.*)@(.*)$', i["acct"])
+                if not result:
+                    accounts.append(f"{i['username']}@{host}")
 
-        else:
-            accounts.append(i["acct"])
+                else:
+                    accounts.append(i["acct"])
+    print(f"found {len(accounts)} follows on {host}")
     return accounts
 
 def follow_accounts(accounts: list, host, token: str):

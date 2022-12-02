@@ -4,4 +4,4 @@ ignore = ["user@server1.io", "user@server2.io"]
 
 ['server2.social']
 token = "Y0UR_0TH3R_ACC#33_T0K3N"
-ignore = ["resu@birdsite.com"]
+ignore = []

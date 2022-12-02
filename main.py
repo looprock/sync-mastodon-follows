@@ -5,6 +5,8 @@ import sys
 import re
 import tomli
 
+# TODO: handle pagination, I'm not getting more than 40 results back
+
 homedir = os.path.expanduser("~")
 toml_config = f"{homedir}/.sync-mastodon-follows.conf"
 if not os.path.isfile(toml_config):
@@ -48,7 +50,6 @@ def follow_accounts(accounts: list, host, token: str):
             endpoint.account_follow(results[0]['id'])
 
 def main ():
-    
     with open(toml_config, mode="rb") as f:
         config = tomli.load(f)
     sites = list(config.keys())
@@ -56,6 +57,7 @@ def main ():
     for site in sites:
         print(f"processing {site}")
         site_res = process_follows(config[site]["token"], site)
+        print(f"found {len(site_res)} follows on {site}")
         follows[site] = site_res
     
     all_follows = []
